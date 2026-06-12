@@ -1,0 +1,43 @@
+{
+  "name": "sendry",
+  "version": "1.0.0",
+  "description": "Real-time API Monitoring SaaS",
+  "main": "server/server.js",
+  "scripts": {
+    "dev": "nodemon server/server.js",
+    "start": "node server/server.js",
+    "consumer": "node server/services/processor/consumer.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sultanxdev/sendry.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/sultanxdev/sendry/issues"
+  },
+  "homepage": "https://github.com/sultanxdev/sendry#readme",
+  "dependencies": {
+    "amqplib": "^1.0.7",
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "express-rate-limit": "^8.5.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.6.1",
+    "pg": "^8.20.0",
+    "uuid": "^14.0.0",
+    "winston": "^3.19.0",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

@@ -1,0 +1,74 @@
+name: Deploy
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/'))
+    
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Log in to Container Registry
+      uses: docker/login-action@v2
+      with:
+        registry: ${{ env.REGISTRY }}
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Extract metadata
+      id: meta
+      uses: docker/metadata-action@v4
+      with:
+        images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+        tags: |
+          type=ref,event=branch
+          type=semver,pattern={{version}}
+          type=semver,pattern={{major}}.{{minor}}
+          type=sha
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        push: true
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+
+    - name: Deploy to staging
+      if: github.ref == 'refs/heads/main'
+      run: |
+        echo "Deploying to staging..."
+        # Add your deployment script here
+        # e.g., kubectl apply -f k8s/staging/ --kubeconfig=${{ secrets.KUBECONFIG }}
+
+    - name: Deploy to production
+      if: startsWith(github.ref, 'refs/tags/v')
+      run: |
+        echo "Deploying to production..."
+        # Add your deployment script here
+        # e.g., kubectl apply -f k8s/production/ --kubeconfig=${{ secrets.KUBECONFIG }}
+
+    - name: Notify Slack
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: 'Deployment ${{ job.status }}'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK }}
+        fields: repo,message,commit,author

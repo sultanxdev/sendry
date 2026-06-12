@@ -1,0 +1,100 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    services:
+      mongodb:
+        image: mongo:5
+        options: >-
+          --health-cmd mongosh
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 27017:27017
+      
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_DB: sendry_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+      
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+      
+      rabbitmq:
+        image: rabbitmq:3.12-management
+        options: >-
+          --health-cmd rabbitmq-diagnostics
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5672:5672
+          - 15672:15672
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+
+    - name: Install dependencies
+      run: npm ci
+
+    - name: Setup environment
+      run: |
+        cp .env.example .env.test
+        sed -i 's/MONGO_URI=.*/MONGO_URI=mongodb:\/\/localhost:27017\/sendry_test/' .env.test
+        sed -i 's/PG_DATABASE=.*/PG_DATABASE=sendry_test/' .env.test
+        sed -i 's/REDIS_URL=.*/REDIS_URL=redis:\/\/localhost:6379/' .env.test
+        sed -i 's/RABBITMQ_URL=.*/RABBITMQ_URL=amqp:\/\/localhost:5672/' .env.test
+
+    - name: Run tests
+      env:
+        NODE_ENV: test
+      run: npm test
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage/coverage-final.json
+        flags: unittests
+        fail_ci_if_error: false
+
+    - name: Archive test results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: coverage/
