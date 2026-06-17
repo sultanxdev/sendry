@@ -31,7 +31,6 @@ By utilizing an **event-driven, decoupled ingest pipeline**, Sendry takes API hi
 ## 📋 Table of Contents
 - [System Architecture](#-system-architecture)
 - [Ingest Sequence Flow](#-ingest-sequence-flow)
-- [Dual-Database Schema Design](#-dual-database-schema-design)
 - [Production-Grade Resiliency Engineering](#-production-grade-resiliency-engineering)
 - [Project Directory Structure](#-project-directory-structure)
 - [Quick Start](#-quick-start)
@@ -274,26 +273,8 @@ app.listen(3000);
 | `POST` | `/api/auth/login` | Log in and receive JWT HTTP-only cookie |
 | `POST` | `/api/auth/logout` | Revoke session and clear cookies |
 
-### Ingestion Group
-| Method | Route | Headers | Description |
-|:---|:---|:---|:---|
-| `POST` | `/api/hit` | `x-api-key` | Ingest API hit (returns 202 Accepted) |
 
-### Analytics Group
-| Method | Route | Auth | Description |
-|:---|:---|:---|:---|
-| `GET` | `/api/analytics/dashboard` | JWT | Get metric values, endpoint charts, and hourly series |
 
----
-
-## 🌍 SaaS Deployment Guide
-
-To deploy the stack on cloud platforms, see the detailed instructions inside [DEPLOY.md](./DEPLOY.md) and the [Cloud Deployment Guide](./Docs/deployment_guide.md) artifact.
-
-- **Frontend (React)**: Easily deployed on **Vercel** with client-side rewrites.
-- **Backend (API & Worker)**: Hosted on **Render** as a Web Service and Background Worker, utilizing managed **Neon PostgreSQL**, **MongoDB Atlas**, and **CloudAMQP** brokers.
-
----
 
 ## 🛠️ Challenges & Solutions
 
