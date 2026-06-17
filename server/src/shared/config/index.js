@@ -18,6 +18,7 @@ const config = {
 
     // postgreSQL
     postgres: {
+        connectionString: process.env.PG_CONNECTION_STRING || '',
         host: process.env.PG_HOST || 'localhost',
         port: parseInt(process.env.PG_PORT || '5432', 10),
         database: process.env.PG_DATABASE || 'api_monitoring',
@@ -47,7 +48,8 @@ const config = {
 
     cookie: {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production" && process.env.COOKIE_SECURE !== "false",
+        sameSite: process.env.COOKIE_SAME_SITE || ((process.env.NODE_ENV === "production" && process.env.COOKIE_SECURE !== "false") ? "none" : "lax"),
         expiresIn: 24 * 60 * 60 * 1000
     }
 }

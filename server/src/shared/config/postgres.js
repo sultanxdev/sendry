@@ -11,16 +11,39 @@ class PostgresConnection {
 
     getPool() {
         if (!this.pool) {
-            this.pool = new Pool({
-                host: config.postgres.host,
-                port: config.postgres.port,
-                database: config.postgres.database,
-                user: config.postgres.user,
-                password: config.postgres.password,
+            const poolConfig = {
                 max: 20,
                 idleTimeoutMillis: 30000,
-                connectionTimeoutMillis: 2000,
-            })
+                connectionTimeoutMillis: 5000,
+            };
+
+            let connectionString = config.postgres.connectionString;
+
+            // Check if connection string is mistakenly placed in PG_HOST (e.g. from copy-pasting command lines)
+            if (!connectionString && config.postgres.host && config.postgres.host.includes('postgresql://')) {
+                const match = config.postgres.host.match(/postgresql:\/\/[^']+/);
+                if (match) {
+                    connectionString = match[0];
+                } else {
+                    connectionString = config.postgres.host;
+                }
+            }
+
+            if (connectionString) {
+                poolConfig.connectionString = connectionString;
+                // Neon and other cloud providers usually require SSL
+                if (connectionString.includes('neon.tech') || connectionString.includes('sslmode=require')) {
+                    poolConfig.ssl = { rejectUnauthorized: false };
+                }
+            } else {
+                poolConfig.host = config.postgres.host;
+                poolConfig.port = config.postgres.port;
+                poolConfig.database = config.postgres.database;
+                poolConfig.user = config.postgres.user;
+                poolConfig.password = config.postgres.password;
+            }
+
+            this.pool = new Pool(poolConfig);
 
             this.pool.on("error", err => {
                 logger.error("Unexpected error on idle PG client", err)

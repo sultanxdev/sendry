@@ -34,6 +34,7 @@ export class AuthController {
             res.cookie("authToken", token, {
                 httpOnly: config.cookie.httpOnly,
                 secure: config.cookie.secure,
+                sameSite: config.cookie.sameSite,
                 maxAge: config.cookie.expiresIn
             });
 
@@ -61,6 +62,7 @@ export class AuthController {
             res.cookie("authToken", token, {
                 httpOnly: config.cookie.httpOnly,
                 secure: config.cookie.secure,
+                sameSite: config.cookie.sameSite,
                 maxAge: config.cookie.expiresIn
             });
 
@@ -84,6 +86,7 @@ export class AuthController {
             res.cookie("authToken", token, {
                 httpOnly: config.cookie.httpOnly,
                 secure: config.cookie.secure,
+                sameSite: config.cookie.sameSite,
                 maxAge: config.cookie.expiresIn
             });
 

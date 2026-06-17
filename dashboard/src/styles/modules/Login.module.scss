@@ -5,9 +5,9 @@
     justify-content: center;
     padding: 1rem;
     background: linear-gradient(to bottom right,
-            rgb(76, 29, 149),
-            rgb(109, 40, 217),
-            rgb(67, 56, 202));
+            rgb(15, 23, 42),
+            rgb(2, 6, 23),
+            rgb(43, 20, 3));
     position: relative;
     overflow: hidden;
 }
@@ -31,20 +31,20 @@
     &.orb1 {
         top: -10rem;
         right: -10rem;
-        background-color: rgb(168, 85, 247);
+        background-color: rgb(249, 115, 22);
     }
 
     &.orb2 {
         bottom: -10rem;
         left: -10rem;
-        background-color: rgb(99, 102, 241);
+        background-color: rgb(234, 88, 12);
         animation-delay: 1s;
     }
 
     &.orb3 {
         top: 10rem;
         left: 10rem;
-        background-color: rgb(236, 72, 153);
+        background-color: rgb(220, 38, 38);
         animation-delay: 2s;
     }
 }
@@ -76,13 +76,13 @@
     width: 4rem;
     height: 4rem;
     background: linear-gradient(to bottom right,
-            rgb(168, 85, 247),
-            rgb(99, 102, 241));
+            rgb(249, 115, 22),
+            rgb(234, 88, 12));
     border-radius: 1rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 10px 25px -3px rgba(168, 85, 247, 0.5);
+    box-shadow: 0 10px 25px -3px rgba(249, 115, 22, 0.5);
 
     svg {
         width: 2rem;
@@ -95,8 +95,8 @@
     font-size: 1.875rem;
     font-weight: 700;
     background: linear-gradient(to right,
-            rgb(196, 181, 253),
-            rgb(129, 140, 248));
+            rgb(253, 186, 116),
+            rgb(249, 115, 22));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

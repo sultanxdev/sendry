@@ -4,7 +4,6 @@ import StatsGrid from '../components/StatsGrid';
 import TopEndpoints from '../components/TopEndpoints';
 import { ApiHitsChart, StatusDistributionChart } from '../components/charts';
 import { PageStatus } from '../components/ui';
-import styles from '../styles/modules/pages/PageComponents.module.scss';
 
 export function OverviewPage() {
     const { data, isPending, error, refetch } = useDashboardQuery();
@@ -33,15 +32,15 @@ export function OverviewPage() {
     }
 
     return (
-        <div className={styles.pageContainer}>
-            <div className={styles.pageHeader}>
-                <h2>Overview</h2>
-                <p>Welcome to your API monitoring dashboard</p>
+        <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-0.5">
+                <h2 className="text-2xl font-black text-[#222026] tracking-tight m-0">Overview</h2>
+                <p className="text-sm text-slate-500 font-semibold m-0">Welcome to your API monitoring dashboard</p>
             </div>
 
             <StatsGrid stats={stats} />
 
-            <div className={styles.gridTwoCols}>
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <ApiHitsChart stats={stats} />
                 <StatusDistributionChart data={statusData} />
             </div>

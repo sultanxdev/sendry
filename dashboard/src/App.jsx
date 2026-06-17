@@ -7,6 +7,8 @@ import { DashboardLayout } from './components/layout';
 import { ThemeProvider } from './contexts/ThemeContext';
 import { ToastProvider } from './contexts/ToastContext';
 import ErrorBoundary from './components/ErrorBoundary';
+import LandingPage from './pages/LandingPage';
+import DocsPage from './pages/DocsPage';
 
 const OverviewPage = lazy(() => import('./pages/OverviewPage').then(m => ({ default: m.OverviewPage })));
 const SettingsPage = lazy(() => import('./pages/SettingsPage').then(m => ({ default: m.SettingsPage })));
@@ -51,26 +53,46 @@ function AuthGate() {
 
     if (isAuthenticated === null) {
         return (
-            <div style={{ height: '100vh', display: 'grid', placeItems: 'center' }}>
+            <div style={{ height: '100vh', display: 'grid', placeItems: 'center', background: 'var(--theme-background)', color: 'hsl(var(--foreground))' }}>
                 Checking authentication…
             </div>
         );
     }
 
-    if (!isAuthenticated) {
-        return <Login onLoginSuccess={handleLoginSuccess} />;
-    }
-
     return (
-        <DashboardLayout onLogout={handleLogout}>
-            <Suspense fallback={pageFallback}>
-                <Routes>
-                    <Route path="/" element={<OverviewPage />} />
-                    <Route path="/settings" element={<SettingsPage />} />
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-            </Suspense>
-        </DashboardLayout>
+        <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<LandingPage isAuthenticated={isAuthenticated} onLogout={handleLogout} />} />
+            <Route path="/docs" element={<DocsPage isAuthenticated={isAuthenticated} />} />
+            
+            {/* Auth routes */}
+            <Route path="/login" element={
+                isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login onLoginSuccess={handleLoginSuccess} initialMode="login" />
+            } />
+            <Route path="/register" element={
+                isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login onLoginSuccess={handleLoginSuccess} initialMode="register" />
+            } />
+
+            {/* Guarded dashboard routes */}
+            <Route path="/dashboard/*" element={
+                isAuthenticated ? (
+                    <DashboardLayout onLogout={handleLogout}>
+                        <Suspense fallback={pageFallback}>
+                            <Routes>
+                                <Route path="/" element={<OverviewPage />} />
+                                <Route path="/settings" element={<SettingsPage />} />
+                                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                            </Routes>
+                        </Suspense>
+                    </DashboardLayout>
+                ) : (
+                    <Navigate to="/login" replace />
+                )
+            } />
+
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
     );
 }
 

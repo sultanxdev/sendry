@@ -3,9 +3,8 @@ import { cn } from '../../lib/utils';
 import {
     LayoutDashboard,
     Settings,
-    Zap,
+    Activity,
 } from 'lucide-react';
-import styles from '../../styles/modules/layout/Sidebar.module.scss';
 
 const navItems = [
     {
@@ -28,52 +27,66 @@ const bottomNavItems = [
 export function Sidebar({ isOpen, onClose }) {
     return (
         <>
+            {/* Mobile Sidebar overlay */}
             {isOpen && (
                 <div
-                    className={styles.mobileOverlay}
+                    className="fixed inset-0 bg-slate-900/30 backdrop-blur-sm z-45 lg:hidden"
                     onClick={onClose}
                     aria-hidden="true"
                 />
             )}
+            
+            {/* Sidebar panel */}
             <aside
-                className={cn(styles.sidebar, !isOpen && styles.closed)}
+                className={cn(
+                    "fixed top-0 left-0 z-50 h-screen w-64 border-r border-[#EBEBEB] bg-white transition-transform duration-350 ease-in-out lg:translate-x-0 flex flex-col",
+                    !isOpen && "-translate-x-full"
+                )}
                 aria-label="Sidebar"
                 aria-expanded={isOpen}
             >
-                <div className={styles.sidebarContainer}>
-                    <div className={styles.logoSection}>
-                        <div className={cn(styles.logoIcon, 'theme-logo-bg')}>
-                            <Zap aria-hidden="true" />
-                        </div>
-                        <div className={styles.logoText}>
-                            <h2 className="theme-text-gradient">API Monitor</h2>
-                            <p>By Code Architecture</p>
-                        </div>
+                {/* Logo Section */}
+                <div className="flex items-center gap-3 h-20 px-6 border-b border-[#EBEBEB] shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-[#222026] flex items-center justify-center shadow-md">
+                        <Activity className="w-5.5 h-5.5 text-[#A7E46A]" />
                     </div>
-                    <nav className={styles.navigation} aria-label="Main navigation">
-                        <div className={styles.navList}>
-                            {navItems.map((item) => {
-                                const Icon = item.icon;
-                                return (
-                                    <NavLink
-                                        key={item.href}
-                                        to={item.href}
-                                        end={item.href === '/'}
-                                        onClick={onClose}
-                                        className={({ isActive }) =>
-                                            cn(styles.navLink, isActive && styles.active)
-                                        }
-                                    >
-                                        <Icon aria-hidden="true" />
-                                        <div className={styles.navItem}>
-                                            <div>{item.title}</div>
-                                        </div>
-                                    </NavLink>
-                                );
-                            })}
-                        </div>
-                    </nav>
-                    <div className={styles.bottomNavigation}>
+                    <div>
+                        <h2 className="text-lg font-black text-[#222026] tracking-tight m-0 leading-tight">Sendry</h2>
+                        <p className="text-[10px] text-slate-400 font-bold tracking-wider uppercase m-0 mt-0.5">API Monitor</p>
+                    </div>
+                </div>
+
+                {/* Primary Navigation */}
+                <nav className="flex-1 overflow-y-auto px-4 py-6" aria-label="Main navigation">
+                    <div className="flex flex-col gap-1.5">
+                        {navItems.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                                <NavLink
+                                    key={item.href}
+                                    to={item.href}
+                                    end={item.href === '/'}
+                                    onClick={onClose}
+                                    className={({ isActive }) =>
+                                        cn(
+                                            "flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200",
+                                            isActive
+                                                ? "bg-[#222026] text-white font-bold shadow-md shadow-slate-200"
+                                                : "text-slate-500 hover:text-[#222026] hover:bg-[#EBEBEB]/30"
+                                        )
+                                    }
+                                >
+                                    <Icon className="w-4.5 h-4.5 shrink-0" aria-hidden="true" />
+                                    <span>{item.title}</span>
+                                </NavLink>
+                            );
+                        })}
+                    </div>
+                </nav>
+
+                {/* Bottom Navigation */}
+                <div className="border-t border-[#EBEBEB] p-4 shrink-0">
+                    <div className="flex flex-col gap-1.5">
                         {bottomNavItems.map((item) => {
                             const Icon = item.icon;
                             return (
@@ -82,13 +95,16 @@ export function Sidebar({ isOpen, onClose }) {
                                     to={item.href}
                                     onClick={onClose}
                                     className={({ isActive }) =>
-                                        cn(styles.navLink, isActive && styles.active)
+                                        cn(
+                                            "flex items-center gap-3.5 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200",
+                                            isActive
+                                                ? "bg-[#222026] text-white font-bold shadow-md shadow-slate-200"
+                                                : "text-slate-500 hover:text-[#222026] hover:bg-[#EBEBEB]/30"
+                                        )
                                     }
                                 >
-                                    <Icon aria-hidden="true" />
-                                    <div className={styles.navItem}>
-                                        <div>{item.title}</div>
-                                    </div>
+                                    <Icon className="w-4.5 h-4.5 shrink-0" aria-hidden="true" />
+                                    <span>{item.title}</span>
                                 </NavLink>
                             );
                         })}

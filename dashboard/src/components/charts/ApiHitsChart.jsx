@@ -2,7 +2,6 @@ import { useMemo } from 'react';
 import Chart from 'react-apexcharts';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui';
 import { useChartTheme } from '../../hooks/useChartTheme';
-import styles from '../../styles/modules/charts/Charts.module.scss';
 
 export function ApiHitsChart({ stats }) {
     const chart = useChartTheme();
@@ -17,20 +16,37 @@ export function ApiHitsChart({ stats }) {
         },
         theme: { mode: chart.mode },
         plotOptions: {
-            bar: { borderRadius: 6, columnWidth: '45%', distributed: true },
+            bar: { borderRadius: 8, columnWidth: '45%', distributed: true },
         },
         dataLabels: { enabled: false },
         grid: { borderColor: chart.gridColor, strokeDashArray: 4 },
         xaxis: {
             categories: ['Total Hits', 'Success', 'Errors'],
-            labels: { style: { colors: chart.labelColor } },
+            labels: { 
+                style: { 
+                    colors: chart.labelColor,
+                    fontFamily: 'Urbanist, sans-serif',
+                    fontWeight: 600
+                } 
+            },
         },
         yaxis: {
-            labels: { style: { colors: chart.labelColor } },
+            labels: { 
+                style: { 
+                    colors: chart.labelColor,
+                    fontFamily: 'Urbanist, sans-serif'
+                } 
+            },
         },
-        colors: ['#8b5cf6', '#22c55e', '#ef4444'],
+        colors: ['#A8DFF8', '#A7E46A', '#222026'],
         legend: { show: false },
-        tooltip: { theme: chart.tooltipTheme },
+        tooltip: { 
+            theme: chart.tooltipTheme,
+            style: {
+                fontSize: '12px',
+                fontFamily: 'Urbanist, sans-serif'
+            }
+        },
     }), [chart.mode, chart.labelColor, chart.gridColor, chart.tooltipTheme]);
 
     const series = useMemo(() => [{
@@ -43,16 +59,16 @@ export function ApiHitsChart({ stats }) {
     }], [stats?.totalHits, stats?.successHits, stats?.errorHits]);
 
     return (
-        <Card className={styles.chartCard}>
+        <Card className="w-full">
             <CardHeader>
                 <CardTitle>API Traffic Summary</CardTitle>
                 <CardDescription>Total, success and error hit counts</CardDescription>
             </CardHeader>
             <CardContent>
                 {isEmpty ? (
-                    <div className={styles.emptyChart}>
-                        <p>No traffic data available yet</p>
-                        <span>Data will appear once API requests are ingested</span>
+                    <div className="flex flex-col items-center justify-center min-h-[300px] text-slate-400">
+                        <p className="font-semibold text-sm m-0">No traffic data available yet</p>
+                        <span className="text-xs text-slate-500 mt-1">Data will appear once API requests are ingested</span>
                     </div>
                 ) : (
                     <Chart options={options} series={series} type="bar" height={350} />

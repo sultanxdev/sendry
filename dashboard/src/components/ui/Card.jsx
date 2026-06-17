@@ -1,10 +1,12 @@
 import { cn } from "../../lib/utils";
-import styles from "../../styles/modules/ui/Card.module.scss";
 
 export function Card({ className, children, ...props }) {
     return (
         <div
-            className={cn(styles.card, className)}
+            className={cn(
+                "bg-white border border-[#EBEBEB] rounded-3xl shadow-lg shadow-slate-200/40 overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-slate-200/60",
+                className
+            )}
             {...props}
         >
             {children}
@@ -15,7 +17,7 @@ export function Card({ className, children, ...props }) {
 export function CardHeader({ className, children, ...props }) {
     return (
         <div
-            className={cn(styles.cardHeader, className)}
+            className={cn("flex flex-col gap-1.5 p-6", className)}
             {...props}
         >
             {children}
@@ -26,7 +28,7 @@ export function CardHeader({ className, children, ...props }) {
 export function CardTitle({ className, children, ...props }) {
     return (
         <h3
-            className={cn(styles.cardTitle, className)}
+            className={cn("text-xl font-bold tracking-tight text-[#222026] m-0", className)}
             {...props}
         >
             {children}
@@ -37,7 +39,7 @@ export function CardTitle({ className, children, ...props }) {
 export function CardDescription({ className, children, ...props }) {
     return (
         <p
-            className={cn(styles.cardDescription, className)}
+            className={cn("text-sm text-slate-500 m-0", className)}
             {...props}
         >
             {children}
@@ -47,7 +49,7 @@ export function CardDescription({ className, children, ...props }) {
 
 export function CardContent({ className, children, ...props }) {
     return (
-        <div className={cn(styles.cardContent, className)} {...props}>
+        <div className={cn("p-6 pt-0", className)} {...props}>
             {children}
         </div>
     );
@@ -56,7 +58,7 @@ export function CardContent({ className, children, ...props }) {
 export function CardFooter({ className, children, ...props }) {
     return (
         <div
-            className={cn(styles.cardFooter, className)}
+            className={cn("flex items-center p-6 pt-0", className)}
             {...props}
         >
             {children}
