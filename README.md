@@ -21,7 +21,7 @@
 
 Sendry is a **production-grade API monitoring engine** built to capture, aggregate, and visualize high-throughput API metrics without introducing latency overhead or blocking downstream application loops. 
 
-By utilizing an **event-driven, decoupled ingest pipeline**, Sendry takes API hits via a zero-dependency SDK middleware, publishes them to a durable queue in under **2 milliseconds**, and processes saving operations asynchronously.
+
 
 ### 🖼️ System Hero Layout
 ![Sendry Hero](./Docs/hero.png)
@@ -260,20 +260,6 @@ app.get('/orders', (req, res) => {
 
 app.listen(3000);
 ```
-
----
-
-## 📡 API Reference
-
-### Auth Endpoint Group
-| Method | Route | Description |
-|:---|:---|:---|
-| `POST` | `/api/auth/onboard` | One-time super admin profile registration |
-| `POST` | `/api/auth/register` | Create developer account |
-| `POST` | `/api/auth/login` | Log in and receive JWT HTTP-only cookie |
-| `POST` | `/api/auth/logout` | Revoke session and clear cookies |
-
-
 
 
 ## 🛠️ Challenges & Solutions
