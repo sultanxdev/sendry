@@ -1,7 +1,7 @@
 
 <div >
 
-# 🚀 Sendry -- API Monitoring & Analytics Platform
+# 🚀 Sendry  - Event-Driven API Observability Platform
 
 A self-hosted API observability platform designed to capture, process, and analyze API events through asynchronous event-driven architecture.
 
