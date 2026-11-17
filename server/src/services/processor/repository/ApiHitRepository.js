@@ -1,23 +1,31 @@
 import { BaseRepository } from "./BaseRepository.js";
-
+import mongoose from "mongoose";
+import memoryStore from "../../../shared/utils/memoryStore.js";
 
 export class ApiHitRepository extends BaseRepository {
     constructor({ model, logger: l } = {}) {
-        super({ logger: l })
+        super({ logger: l });
         if (!model) {
             throw new Error("ApiHitRepository required mongoose model");
         }
         this.model = model;
     }
 
+    _isDbReady() {
+        return mongoose.connection && mongoose.connection.readyState === 1;
+    }
 
     async save(eventData) {
         try {
+            if (!this._isDbReady()) {
+                this.logger.info("[ApiHitRepository] Mongo offline: saving hit in memory store");
+                return await memoryStore.saveApiHit(eventData);
+            }
+
             const doc = new this.model(eventData);
             await doc.save();
 
-            this.logger.info("API hit saved to MongoDB", { eventId: eventData.eventId })
-
+            this.logger.info("API hit saved to MongoDB", { eventId: eventData.eventId });
             return doc;
         } catch (error) {
             if (error && error.code === 11000) {

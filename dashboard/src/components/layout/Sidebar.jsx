@@ -9,7 +9,7 @@ import {
 const navItems = [
     {
         title: 'Overview',
-        href: '/',
+        href: '/dashboard',
         icon: LayoutDashboard,
         description: 'Main dashboard view'
     },
@@ -18,7 +18,7 @@ const navItems = [
 const bottomNavItems = [
     {
         title: 'Settings',
-        href: '/settings',
+        href: '/dashboard/settings',
         icon: Settings,
         description: 'App settings'
     },
@@ -65,7 +65,7 @@ export function Sidebar({ isOpen, onClose }) {
                                 <NavLink
                                     key={item.href}
                                     to={item.href}
-                                    end={item.href === '/'}
+                                    end={item.href === '/dashboard'}
                                     onClick={onClose}
                                     className={({ isActive }) =>
                                         cn(

@@ -22,25 +22,27 @@ class MongoConnection {
             }
 
             await mongoose.connect(config.mongo.uri, {
-                dbName: config.mongo.dbName
-            })
+                dbName: config.mongo.dbName,
+                serverSelectionTimeoutMS: 3000,
+                connectTimeoutMS: 3000
+            });
 
             this.connection = mongoose.connection;
 
             logger.info(`MongoDB connected: ${config.mongo.uri}`);
 
             this.connection.on("error", err => {
-                logger.error("MongoDB connection error", err)
-            })
+                logger.error("MongoDB connection error", err);
+            });
 
             this.connection.on("disconnected", () => {
-                logger.error("MongoDB Disconnected")
-            })
+                logger.warn("MongoDB Disconnected");
+            });
 
-            return this.connection
+            return this.connection;
         } catch (error) {
-            logger.error('Failed to connect to MongoDB:', error);
-            throw error;
+            logger.warn(`Could not connect to MongoDB cluster: ${error.message}. Running with in-memory persistence fallback.`);
+            return null;
         }
     }
 

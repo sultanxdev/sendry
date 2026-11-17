@@ -1,12 +1,13 @@
 import config from "../../../shared/config/index.js";
 import AppError from "../../../shared/utils/AppError.js";
 import jwt from "jsonwebtoken";
-import logger from "../../../shared/config/logger.js"
+import logger from "../../../shared/config/logger.js";
 import bcrypt from "bcryptjs";
 import { APPLICATION_ROLES } from "../../../shared/constants/roles.js";
 import mongoose from "mongoose";
 import Client from "../../../shared/models/Client.js";
 import User from "../../../shared/models/User.js";
+import memoryStore from "../../../shared/utils/memoryStore.js";
 
 /**
  * AuthService handles user authentication and authorization related operations such as onboarding super admin, user registration, login, and fetching user profile.
@@ -118,31 +119,47 @@ export class AuthService {
                 const clientName = `${userData.username}'s Team`;
                 const slug = `${userData.username.toLowerCase().replace(/[^a-z0-9]/g, '-')}-team`;
 
-                // 1. Prevent duplicate client slugs
-                const existingClient = await Client.findOne({ slug });
-                if (existingClient) {
-                    throw new AppError("A client team with this username slug already exists", 409);
+                const isDbReady = mongoose.connection && mongoose.connection.readyState === 1;
+
+                if (isDbReady) {
+                    // 1. Prevent duplicate client slugs
+                    const existingClient = await Client.findOne({ slug });
+                    if (existingClient) {
+                        throw new AppError("A client team with this username slug already exists", 409);
+                    }
+
+                    // 2. Pre-validate User schema values (like password strength) to prevent orphaned Clients
+                    const tempUser = new User({
+                        _id: userId,
+                        username: userData.username,
+                        email: userData.email,
+                        password: userData.password,
+                        role: APPLICATION_ROLES.CLIENT_ADMIN,
+                        clientId: clientId
+                    });
+                    await tempUser.validate();
+
+                    const client = new Client({
+                        _id: clientId,
+                        name: clientName,
+                        slug: slug,
+                        email: userData.email,
+                        createdBy: userId
+                    });
+                    await client.save();
+                } else {
+                    const existingClient = await memoryStore.findClientBySlug(slug);
+                    if (existingClient) {
+                        throw new AppError("A client team with this username slug already exists", 409);
+                    }
+                    await memoryStore.createClient({
+                        _id: clientId,
+                        name: clientName,
+                        slug: slug,
+                        email: userData.email,
+                        createdBy: userId
+                    });
                 }
-
-                // 2. Pre-validate User schema values (like password strength) to prevent orphaned Clients
-                const tempUser = new User({
-                    _id: userId,
-                    username: userData.username,
-                    email: userData.email,
-                    password: userData.password,
-                    role: APPLICATION_ROLES.CLIENT_ADMIN,
-                    clientId: clientId
-                });
-                await tempUser.validate();
-
-                const client = new Client({
-                    _id: clientId,
-                    name: clientName,
-                    slug: slug,
-                    email: userData.email,
-                    createdBy: userId
-                });
-                await client.save();
 
                 userData._id = userId;
                 userData.clientId = clientId;

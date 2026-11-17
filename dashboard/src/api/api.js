@@ -105,6 +105,14 @@ export const clientApi = {
         const response = await api.get(`/admin/clients/${clientId}/api-keys`);
         return response.data;
     },
+    getMyApiKeys: async () => {
+        const response = await api.get('/api-keys');
+        return response.data;
+    },
+    createMyApiKey: async (keyData) => {
+        const response = await api.post('/api-keys', keyData);
+        return response.data;
+    },
 };
 
 export default api;

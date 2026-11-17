@@ -1,16 +1,21 @@
 import BaseRepository from "./BaseRepository.js";
-import User from "../../../shared/models/User.js"
-import logger from "../../../shared/config/logger.js"
+import User from "../../../shared/models/User.js";
+import logger from "../../../shared/config/logger.js";
+import mongoose from "mongoose";
+import memoryStore from "../../../shared/utils/memoryStore.js";
 
 /**
- * MongoDB implementation of the UserRepository.
+ * MongoDB implementation of the UserRepository with resilient in-memory fallback.
  * This class provides methods to interact with the User collection in MongoDB.
  */
 class MongoUserRepository extends BaseRepository {
     constructor() {
-        super(User)
+        super(User);
     }
 
+    _isDbReady() {
+        return mongoose.connection && mongoose.connection.readyState === 1;
+    }
 
     /**
      * Creates a new user in the database.
@@ -19,23 +24,28 @@ class MongoUserRepository extends BaseRepository {
      */
     async create(userData) {
         try {
-            let data = { ...userData }
+            let data = { ...userData };
             if (data.role === "super_admin" && !data.permissions) {
                 data.permissions = {
                     canCreateApiKeys: true,
                     canManageUsers: true,
                     canViewAnalytics: true,
                     canExportData: true,
-                }
+                };
+            }
+
+            if (!this._isDbReady()) {
+                logger.info("[UserRepository] Mongo offline: saving user in memory store");
+                return await memoryStore.createUser(data);
             }
 
             const user = new this.model(data);
             await user.save();
 
             logger.info("User created", { username: user.username });
-            return user
+            return user;
         } catch (error) {
-            logger.error("Error creating user", error)
+            logger.error("Error creating user", error);
             throw error;
         }
     }
@@ -47,10 +57,13 @@ class MongoUserRepository extends BaseRepository {
      */
     async findById(userId) {
         try {
-            const user = await this.model.findById(userId)
-            return user
+            if (!this._isDbReady()) {
+                return await memoryStore.findUserById(userId);
+            }
+            const user = await this.model.findById(userId);
+            return user;
         } catch (error) {
-            logger.error("Error finding user by id", error)
+            logger.error("Error finding user by id", error);
             throw error;
         }
     }
@@ -62,10 +75,13 @@ class MongoUserRepository extends BaseRepository {
      */
     async findByUsername(username) {
         try {
-            const user = await this.model.findOne({ username })
-            return user
+            if (!this._isDbReady()) {
+                return await memoryStore.findUserByUsername(username);
+            }
+            const user = await this.model.findOne({ username });
+            return user;
         } catch (error) {
-            logger.error("Error finding user by username", error)
+            logger.error("Error finding user by username", error);
             throw error;
         }
     }
@@ -77,10 +93,13 @@ class MongoUserRepository extends BaseRepository {
      */
     async findByEmail(email) {
         try {
-            const user = await this.model.findOne({ email })
-            return user
+            if (!this._isDbReady()) {
+                return await memoryStore.findUserByEmail(email);
+            }
+            const user = await this.model.findOne({ email });
+            return user;
         } catch (error) {
-            logger.error("Error finding user by email", error)
+            logger.error("Error finding user by email", error);
             throw error;
         }
     }
@@ -91,10 +110,13 @@ class MongoUserRepository extends BaseRepository {
      */
     async findAll() {
         try {
-            const user = await this.model.find({ isActive: true }).select("-password")
-            return user
+            if (!this._isDbReady()) {
+                return await memoryStore.findAllUsers();
+            }
+            const user = await this.model.find({ isActive: true }).select("-password");
+            return user;
         } catch (error) {
-            logger.error("Error finding user by email", error)
+            logger.error("Error finding user by email", error);
             throw error;
         }
     }

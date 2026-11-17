@@ -54,7 +54,7 @@ function AuthGate() {
     if (isAuthenticated === null) {
         return (
             <div style={{ height: '100vh', display: 'grid', placeItems: 'center', background: 'var(--theme-background)', color: 'hsl(var(--foreground))' }}>
-                Checking authentication…
+
             </div>
         );
     }
@@ -64,7 +64,7 @@ function AuthGate() {
             {/* Public routes */}
             <Route path="/" element={<LandingPage isAuthenticated={isAuthenticated} onLogout={handleLogout} />} />
             <Route path="/docs" element={<DocsPage isAuthenticated={isAuthenticated} />} />
-            
+
             {/* Auth routes */}
             <Route path="/login" element={
                 isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login onLoginSuccess={handleLoginSuccess} initialMode="login" />

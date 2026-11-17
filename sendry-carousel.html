@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sendry — LinkedIn Carousel (10 slides, 1080×1350)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#141317;
+  --ink2:#222026;
+  --ink3:#2C2A32;
+  --lime:#A7E46A;
+  --sky:#A8DFF8;
+  --rose:#F19A9A;
+  --paper:#F4F5F1;
+  --line:#E4E4DE;
+  --onDark:#F2F3EF;
+  --onDarkMute:#9C9CA6;
+  --onLight:#1A1920;
+  --onLightMute:#6B6B74;
+  --head:'Plus Jakarta Sans','Segoe UI',system-ui,-apple-system,sans-serif;
+  --body:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
+  --mono:'JetBrains Mono','Cascadia Mono','Consolas',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#5B5B62;font-family:var(--body);-webkit-font-smoothing:antialiased}
+
+/* ---------- screen-only helper bar ---------- */
+.toolbar{
+  position:sticky;top:0;z-index:99;background:#111014;color:#F2F3EF;
+  padding:18px 26px;font-size:14px;line-height:1.6;border-bottom:2px solid var(--lime)
+}
+.toolbar b{color:var(--lime);font-family:var(--head);letter-spacing:.02em}
+.toolbar code{font-family:var(--mono);background:#26242C;padding:2px 6px;border-radius:4px;font-size:13px}
+
+.deck{display:flex;flex-direction:column;align-items:center;gap:28px;padding:28px 0 60px}
+
+/* ---------- slide shell ---------- */
+.slide{
+  width:1080px;height:1350px;overflow:hidden;position:relative;
+  padding:84px 80px 76px;display:flex;flex-direction:column;
+  box-shadow:0 18px 50px rgba(0,0,0,.35)
+}
+.dark{background:var(--ink);color:var(--onDark)}
+.dark::before{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(880px 520px at 84% -8%, rgba(167,228,106,.13), transparent 62%)
+}
+.light{background:var(--paper);color:var(--onLight)}
+.slide > *{position:relative;z-index:1}
+
+/* ---------- type ---------- */
+.eyebrow{
+  font-family:var(--head);font-weight:700;font-size:16px;letter-spacing:.20em;
+  text-transform:uppercase;color:var(--lime)
+}
+.light .eyebrow{color:#5E8F2E}
+h1{font-family:var(--head);font-weight:800;letter-spacing:-.028em;line-height:1.04}
+.t-xl{font-size:76px}
+.t-lg{font-size:64px}
+.t-md{font-size:54px}
+.lead{font-size:26px;line-height:1.52;color:var(--onDarkMute);max-width:840px}
+.light .lead{color:var(--onLightMute)}
+.lead strong{color:var(--onDark);font-weight:600}
+.light .lead strong{color:var(--onLight)}
+.lime{color:var(--lime)}
+.mark{background:var(--lime);color:var(--ink);padding:4px 14px 10px;border-radius:12px;display:inline-block}
+.spacer{flex:1 1 auto;min-height:16px}
+
+/* ---------- footer ---------- */
+.foot{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  font-family:var(--mono);font-size:15px;letter-spacing:.04em;color:var(--onDarkMute)
+}
+.light .foot{color:#9A9A93}
+.wordmark{display:flex;align-items:center;gap:10px;font-family:var(--head);font-weight:800;letter-spacing:-.01em;font-size:19px;color:var(--onDark)}
+.light .wordmark{color:var(--onLight)}
+.dot{width:12px;height:12px;border-radius:50%;background:var(--lime);flex:none}
+
+/* ---------- chips ---------- */
+.chips{display:flex;flex-wrap:wrap;gap:10px}
+.chip{
+  font-family:var(--mono);font-size:16px;padding:9px 15px;border-radius:9px;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#D8D9D3
+}
+.light .chip{background:#fff;border:1px solid var(--line);color:#4A4A52}
+.chip.on{background:var(--lime);border-color:var(--lime);color:var(--ink);font-weight:700}
+
+/* ---------- pipeline node motif ---------- */
+.node{
+  display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:14px;
+  background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.11);
+  font-family:var(--head);font-weight:600;font-size:22px;color:var(--onDark)
+}
+.light .node{background:#fff;border:1px solid var(--line);color:var(--onLight);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.node .pip{width:9px;height:9px;border-radius:50%;background:var(--lime);flex:none}
+.node.ghost{background:transparent;border-style:dashed;color:var(--onDarkMute)}
+.light .node.ghost{background:transparent;border-style:dashed;color:var(--onLightMute);box-shadow:none}
+.node.bad{border-color:rgba(241,154,154,.45)}
+.node.bad .pip{background:var(--rose)}
+.node.hot{background:var(--lime);border-color:var(--lime);color:var(--ink);font-weight:700}
+.node.hot .pip{background:var(--ink)}
+.node .sub{font-family:var(--mono);font-weight:400;font-size:15px;color:var(--onDarkMute);margin-left:auto}
+.light .node .sub{color:var(--onLightMute)}
+.node.hot .sub{color:rgba(20,19,23,.62)}
+
+.flow{display:flex;flex-direction:column;gap:9px}
+.tick{height:16px;display:flex;align-items:center;justify-content:center;font-size:16px;color:#5F5F69;line-height:1}
+.light .tick{color:#B4B4AE}
+.fork{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* ---------- cards ---------- */
+.card{
+  background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;padding:26px 24px
+}
+.light .card{background:#fff;border:1px solid var(--line);box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.card h4{font-family:var(--head);font-weight:800;font-size:23px;letter-spacing:-.01em;margin-bottom:12px}
+.card p{font-size:18px;line-height:1.5;color:var(--onDarkMute)}
+.light .card p{color:var(--onLightMute)}
+.card .mono{font-family:var(--mono);font-size:16px;line-height:1.75;color:var(--lime)}
+.light .card .mono{color:#4E7F22}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+/* ---------- kicker ---------- */
+.kicker{
+  border-left:4px solid var(--lime);padding:4px 0 4px 24px;
+  font-family:var(--head);font-weight:700;font-size:30px;line-height:1.34;letter-spacing:-.015em
+}
+
+/* ---------- numbered steps ---------- */
+.steps{display:flex;flex-direction:column;gap:13px}
+.step{display:flex;align-items:flex-start;gap:20px;padding:15px 20px;border-radius:14px;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.09)}
+.step .n{font-family:var(--mono);font-weight:700;font-size:20px;color:var(--lime);width:34px;flex:none;padding-top:3px}
+.step .b{font-family:var(--head);font-weight:600;font-size:25px;line-height:1.3;letter-spacing:-.01em}
+.step .b em{display:block;font-family:var(--mono);font-style:normal;font-weight:400;font-size:16px;color:var(--onDarkMute);margin-top:6px;letter-spacing:.01em}
+.step.fin{background:var(--lime);border-color:var(--lime)}
+.step.fin .n{color:rgba(20,19,23,.55)}
+.step.fin .b{color:var(--ink)}
+.step.fin .b em{color:rgba(20,19,23,.7)}
+
+/* ---------- comparison table ---------- */
+.cmp{width:100%;border-collapse:collapse;font-size:20px}
+.cmp th{
+  font-family:var(--head);font-weight:800;font-size:25px;letter-spacing:-.01em;
+  text-align:left;padding:0 20px 16px;border-bottom:2px solid rgba(255,255,255,.16)
+}
+.cmp th.a{color:var(--lime)}
+.cmp th.b{color:var(--sky)}
+.cmp td{padding:17px 20px;border-bottom:1px solid rgba(255,255,255,.075);color:#DADBD5;line-height:1.35}
+.cmp tr:last-child td{border-bottom:none}
+.cmp td.k{font-family:var(--mono);font-size:17px;color:var(--onDarkMute)}
+
+/* ---------- code ---------- */
+pre{
+  background:#0D0C10;border:1px solid rgba(255,255,255,.11);border-radius:16px;
+  padding:26px 28px;font-family:var(--mono);font-size:18px;line-height:1.78;
+  color:#DDDEE4;overflow:hidden;white-space:pre
+}
+pre .c{color:#6D6D7A}
+pre .k{color:#C9A0F5}
+pre .f{color:var(--lime)}
+pre .s{color:var(--sky)}
+pre .hl{background:rgba(167,228,106,.13);border-radius:4px;display:inline-block;padding:0 4px;margin:0 -4px}
+
+/* ---------- v2 grid ---------- */
+.v2{display:grid;grid-template-columns:1.05fr 1.25fr 1.05fr;gap:0;border-radius:18px;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
+.v2 .hd{
+  font-family:var(--head);font-weight:800;font-size:19px;letter-spacing:.05em;text-transform:uppercase;
+  padding:16px 20px;background:rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.12)
+}
+.v2 .hd.p{color:var(--rose)}
+.v2 .hd.n{color:var(--lime)}
+.v2 .cl{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.075);font-size:19px;line-height:1.45}
+.v2 .cl.mid{background:rgba(241,154,154,.055);color:#C9C4C4}
+.v2 .cl.new{background:rgba(167,228,106,.07)}
+.v2 .cl b{font-family:var(--mono);font-weight:500;font-size:17px;display:block;margin-bottom:5px;color:#fff}
+.v2 .cl.new b{color:var(--lime)}
+.v2 .r3 .cl{border-bottom:none}
+
+/* ---------- now / next strip ---------- */
+.scale{display:flex;flex-direction:column;gap:12px}
+.sr{display:flex;align-items:baseline;gap:18px;padding:17px 22px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
+.sr u{text-decoration:none;font-family:var(--mono);font-size:15px;letter-spacing:.10em;text-transform:uppercase;color:var(--onDarkMute);width:64px;flex:none}
+.sr b{font-family:var(--head);font-weight:700;font-size:23px;letter-spacing:-.01em}
+.sr.on{background:rgba(167,228,106,.09);border-color:rgba(167,228,106,.42)}
+.sr.on u{color:#89BE55}
+.sr.on b{color:var(--lime)}
+
+/* ---------- dashboard wireframe ---------- */
+.win{border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#fff;box-shadow:0 8px 26px rgba(0,0,0,.10)}
+.win .bar{display:flex;align-items:center;gap:8px;padding:13px 16px;background:#EFEFEA;border-bottom:1px solid var(--line)}
+.win .bar i{width:11px;height:11px;border-radius:50%;background:#C9C9C2;display:block}
+.win .bar span{margin-left:10px;font-family:var(--mono);font-size:14px;color:#84847C}
+.win .bd{padding:20px}
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px}
+.kpi{border:1px solid var(--line);border-radius:11px;padding:14px 15px;background:#FCFCFA}
+.kpi u{display:block;text-decoration:none;font-family:var(--mono);font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:#9A9A93}
+.kpi s{display:block;text-decoration:none;font-family:var(--head);font-weight:800;font-size:27px;color:#C4C4BD;margin-top:5px;line-height:1}
+.panes{display:grid;grid-template-columns:1.5fr 1fr;gap:12px}
+.pane{border:1px solid var(--line);border-radius:11px;padding:14px 15px;background:#FCFCFA;height:186px;display:flex;flex-direction:column}
+.pane b{font-family:var(--head);font-weight:700;font-size:16px;color:#3A3A42}
+.pane i{font-family:var(--mono);font-style:normal;font-size:12px;color:#9A9A93;margin-top:3px}
+.pane .art{flex:1;margin-top:11px;display:flex;align-items:flex-end;gap:5px}
+.pane .art u{display:block;flex:1;background:repeating-linear-gradient(0deg,#DFE9D2 0 3px,transparent 3px 6px);border-radius:3px 3px 0 0;text-decoration:none}
+.ring{align-self:center;margin-top:10px;width:96px;height:96px;border-radius:50%;border:14px dashed #DFE9D2;flex:none}
+.tbl{margin-top:12px;border:1px solid var(--line);border-radius:11px;background:#FCFCFA;padding:13px 15px}
+.tbl b{font-family:var(--head);font-weight:700;font-size:16px;color:#3A3A42}
+.tbl .row{display:flex;align-items:center;gap:10px;margin-top:10px}
+.tbl .row u{height:9px;border-radius:5px;background:#E6E6DF;text-decoration:none;display:block}
+.wtag{
+  margin-left:auto;font-family:var(--mono);font-size:12px;letter-spacing:.10em;
+  text-transform:uppercase;background:var(--ink);color:var(--lime);padding:5px 10px;border-radius:6px
+}
+
+/* ---------- architecture figure ---------- */
+.figwrap{background:#fff;border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 6px 22px rgba(0,0,0,.07)}
+.figwrap img{display:block;width:100%;height:auto;border-radius:8px}
+.figcap{font-family:var(--mono);font-size:15px;color:#8A8A83;margin-top:12px;text-align:center;letter-spacing:.02em}
+
+/* ---------- link block ---------- */
+.links{display:flex;flex-direction:column;gap:12px}
+.lk{display:flex;align-items:baseline;gap:16px;padding:17px 22px;border-radius:13px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12)}
+.lk u{text-decoration:none;font-family:var(--mono);font-size:15px;letter-spacing:.10em;text-transform:uppercase;color:var(--onDarkMute);width:112px;flex:none}
+.lk b{font-family:var(--head);font-weight:700;font-size:23px;letter-spacing:-.01em;word-break:break-all}
+.lk.on{background:var(--lime);border-color:var(--lime)}
+.lk.on u{color:rgba(20,19,23,.6)}
+.lk.on b{color:var(--ink)}
+
+/* ---------- split header for problem slide ---------- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.colhd{font-family:var(--head);font-weight:800;font-size:24px;letter-spacing:-.01em;margin-bottom:16px;display:flex;align-items:center;gap:11px}
+.colhd .tagx{font-family:var(--mono);font-size:13px;font-weight:400;letter-spacing:.06em;padding:5px 10px;border-radius:6px;background:rgba(241,154,154,.16);color:var(--rose);text-transform:uppercase}
+.colhd .tagy{font-family:var(--mono);font-size:13px;font-weight:400;letter-spacing:.06em;padding:5px 10px;border-radius:6px;background:rgba(167,228,106,.18);color:var(--lime);text-transform:uppercase}
+.note{font-family:var(--mono);font-size:16px;line-height:1.6;color:var(--onDarkMute);margin-top:16px}
+.note.bad{color:var(--rose)}
+
+/* ---------- print ---------- */
+@page{size:1080px 1350px;margin:0}
+@media print{
+  html,body{background:#fff}
+  .toolbar{display:none!important}
+  .deck{display:block;gap:0;padding:0}
+  .slide{margin:0;box-shadow:none;break-after:page;page-break-after:always;break-inside:avoid;page-break-inside:avoid}
+  .slide:last-child{break-after:auto;page-break-after:auto}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <b>Sendry carousel — 10 slides, 1080×1350 (4:5).</b>
+  Export in Chrome or Edge: <code>Ctrl + P</code> → Destination <b>Save as PDF</b> → Margins <b>None</b> → Scale <b>Default (100)</b> → <b>uncheck</b> "Headers and footers" → <b>check</b> "Background graphics" → Save.
+  The page size is already set in CSS, so leave Paper size alone. Confirm the PDF has <b>10 pages, all portrait</b>, then upload it to LinkedIn as a <b>document post</b> — that is the native carousel format.
+</div>
+
+<div class="deck">
+
+<!-- ═══════════════════ 01 · THE HOOK ═══════════════════ -->
+<section class="slide dark">
+  <div class="eyebrow">Engineering case study</div>
+  <div style="height:30px"></div>
+  <h1 class="t-xl">What if monitoring<br>your API didn't<br><span class="mark">slow your API down?</span></h1>
+  <div style="height:34px"></div>
+  <p class="lead">
+    I built <strong>Sendry</strong> — an event-driven API monitoring platform
+    designed to capture API telemetry <strong>without putting database writes
+    on the request path</strong>.
+  </p>
+
+  <div class="spacer"></div>
+
+  <div class="flow" style="max-width:560px">
+    <div class="node"><span class="pip"></span>Your API responds<span class="sub">first</span></div>
+    <div class="tick">↓</div>
+    <div class="node ghost"><span class="pip"></span>Telemetry leaves afterwards<span class="sub">setImmediate</span></div>
+    <div class="tick">↓</div>
+    <div class="node hot"><span class="pip"></span>Queue absorbs the write<span class="sub">RabbitMQ</span></div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="chips" style="margin-bottom:34px">
+    <span class="chip">Node.js</span><span class="chip">Express</span>
+    <span class="chip">RabbitMQ</span><span class="chip">MongoDB</span>
+    <span class="chip">PostgreSQL</span><span class="chip">React</span>
+    <span class="chip">Docker</span>
+  </div>
+
+  <div class="foot">
+    <div class="wordmark"><span class="dot"></span>Sendry</div>
+    <div>01 / 10</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 02 · THE PROBLEM ═══════════════════ -->
+<section class="slide dark">
+  <div class="eyebrow">The problem</div>
+  <div style="height:28px"></div>
+  <h1 class="t-md">The hard part wasn't<br>collecting metrics.<br><span class="lime">It was collecting them<br>without becoming<br>the bottleneck.</span></h1>
+
+  <div style="height:52px"></div>
+
+  <div class="two">
+    <div>
+      <div class="colhd">Traditional <span class="tagx">blocking</span></div>
+      <div class="flow">
+        <div class="node bad"><span class="pip"></span>API request</div>
+        <div class="tick">↓</div>
+        <div class="node bad"><span class="pip"></span>Monitoring</div>
+        <div class="tick">↓</div>
+        <div class="node bad"><span class="pip"></span>Database write</div>
+        <div class="tick">↓</div>
+        <div class="node bad"><span class="pip"></span>Response</div>
+      </div>
+      <p class="note bad">Monitoring is now part of<br>the request path.</p>
+    </div>
+
+    <div>
+      <div class="colhd">Sendry <span class="tagy">decoupled</span></div>
+      <div class="flow">
+        <div class="node"><span class="pip"></span>API request</div>
+        <div class="tick">↓</div>
+        <div class="node hot"><span class="pip"></span>Response</div>
+        <div class="tick">↓</div>
+        <div class="node"><span class="pip"></span>Async telemetry</div>
+        <div class="tick">↓</div>
+        <div class="node"><span class="pip"></span>RabbitMQ</div>
+        <div class="tick">↓</div>
+        <div class="node"><span class="pip"></span>Background consumer</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="kicker" style="margin-bottom:34px">
+    The monitored application never<br>waits for the analytics pipeline.
+  </div>
+
+  <div class="foot">
+    <div class="wordmark"><span class="dot"></span>Sendry</div>
+    <div>02 / 10</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 03 · THE ARCHITECTURE ═══════════════════ -->
+<section class="slide light">
+  <div class="eyebrow">The architecture</div>
+  <div style="height:26px"></div>
+  <h1 class="t-md">So I built it around<br>an event-driven pipeline.</h1>
+
+  <div style="height:32px"></div>
+
+  <div class="flow" style="max-width:660px;margin:0 auto">
+    <div class="node"><span class="pip"></span>Express SDK<span class="sub">host app</span></div>
+    <div class="tick">↓</div>
+    <div class="node"><span class="pip"></span>Ingest API</div>
+    <div class="tick">↓</div>
+    <div class="node"><span class="pip"></span>API key validation</div>
+    <div class="tick">↓</div>
+    <div class="node hot"><span class="pip"></span>RabbitMQ<span class="sub">durable queue</span></div>
+    <div class="tick">↓</div>
+    <div class="node"><span class="pip"></span>Background consumer</div>
+    <div class="tick">↓</div>
+    <div class="fork">
+      <div class="node"><span class="pip"></span>MongoDB<span class="sub">raw</span></div>
+      <div class="node"><span class="pip"></span>PostgreSQL<span class="sub">rollups</span></div>
+    </div>
+    <div class="tick">↓</div>
+    <div class="node"><span class="pip"></span>Analytics API</div>
+    <div class="tick">↓</div>
+    <div class="node"><span class="pip"></span>React dashboard</div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="kicker" style="margin-bottom:30px">
+    Ingestion, processing, storage and<br>analytics scale independently.
+  </div>
+
+  <div class="foot">
+    <div class="wordmark"><span class="dot"></span>Sendry</div>
+    <div>03 / 10</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 04 · REQUEST LIFECYCLE ═══════════════════ -->
+<section class="slide dark">
+  <div class="eyebrow">One request, end to end</div>
+  <div style="height:26px"></div>
+  <h1 class="t-md">What actually happens<br>when an API request<br>completes?</h1>
+
+  <div style="height:42px"></div>
+
+  <div class="steps">
+    <div class="step"><div class="n">01</div><div class="b">Middleware intercepts the response<em>res.end override</em></div></div>
+    <div class="step"><div class="n">02</div><div class="b">Captures endpoint, status and latency<em>method · statusCode · latencyMs</em></div></div>
+    <div class="step"><div class="n">03</div><div class="b">Sends telemetry asynchronously<em>setImmediate — off the critical path</em></div></div>
+    <div class="step"><div class="n">04</div><div class="b">Sendry validates the API key<em>x-api-key · scope · expiry</em></div></div>
+    <div class="step"><div class="n">05</div><div class="b">Event is published to RabbitMQ<em>durable queue · uuid eventId</em></div></div>
+    <div class="step fin"><div class="n">06</div><div class="b">API immediately returns 202 Accepted<em>503 instead, if the circuit breaker is open</em></div></div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="kicker" style="margin-bottom:34px">
+    The consumer does all the<br>expensive work later.
+  </div>
+
+  <div class="foot">
+    <div class="wordmark"><span class="dot"></span>Sendry</div>
+    <div>04 / 10</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 05 · THE SDK ═══════════════════ -->
+<section class="slide dark">
+  <div class="eyebrow">The SDK</div>
+  <div style="height:26px"></div>
+  <h1 class="t-md">The whole client library<br>is one middleware<br>and one trick.</h1>
+
+  <div style="height:36px"></div>
+
+  <pre><span class="c">// capture the response without touching any route handler</span>
+<span class="k">const</span> originalEnd = res.end;
+
+res.end = <span class="k">function</span> (...args) {
+  <span class="k">const</span> latencyMs = Date.<span class="f">now</span>() - startTime;
+
+  <span class="hl"><span class="f">setImmediate</span>(() =&gt; <span class="f">send</span>(payload));</span>  <span class="c">// later tick</span>
+  originalEnd.<span class="f">apply</span>(res, args);      <span class="c">// response goes out</span>
+};</pre>
+
+  <div style="height:28px"></div>
+
+  <div class="grid3">
+    <div class="card">
+      <h4>Never breaks<br>the host app</h4>
+      <p>Every send is wrapped in try/catch and fails silently. Monitoring must not take down what it monitors.</p>
+    </div>
+    <div class="card">
+      <h4>Bounded<br>blast radius</h4>
+      <p>A 3-second HTTP timeout, so an unreachable Sendry can't accumulate hanging sockets.</p>
+    </div>
+    <div class="card">
+      <h4>No key,<br>no-op</h4>
+      <p>Without an API key the middleware returns a pass-through. Safe by default in any environment.</p>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="kicker" style="margin-bottom:34px">
+    No route changes. No config in<br>the request path.
+  </div>
+
+  <div class="foot">
+    <div class="wordmark"><span class="dot"></span>Sendry</div>
+    <div>05 / 10</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 06 · RELIABILITY ═══════════════════ -->
+<section class="slide light">
+  <div class="eyebrow">Failure modes</div>
+  <div style="height:26px"></div>
+  <h1 class="t-md">But what happens<br>when things fail?</h1>
+
+  <div style="height:40px"></div>
+
+  <div class="flow" style="max-width:600px">
+    <div class="node bad"><span class="pip"></span>RabbitMQ or database failure</div>
+    <div class="tick">↓</div>
+    <div class="node"><span class="pip"></span>Circuit breaker<span class="sub">trips at 5</span></div>
+    <div class="tick">↓</div>
+    <div class="node"><span class="pip"></span>Retry with exponential backoff<span class="sub">± 30% jitter</span></div>
+    <div class="tick">↓</div>
+    <div class="node ghost"><span class="pip"></span>Still failing after 3 attempts?</div>
+    <div class="tick">↓</div>
+    <div class="node hot"><span class="pip"></span>Dead letter queue<span class="sub">api_hits.dlq</span></div>
+  </div>
+
+  <div style="height:34px"></div>
+
+  <div class="grid3">
+    <div class="card">
+      <h4>Circuit breaker</h4>
+      <div class="mono">CLOSED<br>→ OPEN<br>→ HALF_OPEN</div>
+      <p style="margin-top:12px">5 failures to open, 30s cooldown, 3 probes must all pass to close again.</p>
+    </div>
+    <div class="card">
+      <h4>Retry</h4>
+      <div class="mono">1s → 2s → 4s<br>± 30% jitter</div>
+      <p style="margin-top:12px">Jitter spreads retries so recovering services don't get a thundering herd.</p>
+    </div>
+    <div class="card">
+      <h4>DLQ</h4>
+      <div class="mono">x-dlq-reason<br>x-dlq-error<br>x-original-queue</div>
+      <p style="margin-top:12px">Failed events are tagged and parked for inspection, not silently discarded.</p>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="kicker" style="margin-bottom:30px">
+    Most side projects stop at<br>API → database → dashboard.
+  </div>
+
+  <div class="foot">
+    <div class="wordmark"><span class="dot"></span>Sendry</div>
+    <div>06 / 10</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 07 · WHY TWO DATABASES ═══════════════════ -->
+<section class="slide dark">
+  <div class="eyebrow">Storage design</div>
+  <div style="height:26px"></div>
+  <h1 class="t-md">Why MongoDB <span style="color:var(--onDarkMute)">and</span><br>PostgreSQL?</h1>
+  <div style="height:20px"></div>
+  <p class="lead">Not because both are good databases. Because ingestion and analytics are two different workloads.</p>
+
+  <div style="height:40px"></div>
+
+  <table class="cmp">
+    <tr>
+      <th style="width:23%"></th>
+      <th class="a" style="width:38.5%">MongoDB</th>
+      <th class="b" style="width:38.5%">PostgreSQL</th>
+    </tr>
+    <tr><td class="k">holds</td><td>Raw API events</td><td>Aggregated metrics</td></tr>
+    <tr><td class="k">shape</td><td>Flexible event documents</td><td>Structured analytics rows</td></tr>
+    <tr><td class="k">tuned for</td><td>High-volume writes</td><td>Time-series reads</td></tr>
+    <tr><td class="k">lifecycle</td><td>30-day TTL index</td><td>Hourly buckets, upserted</td></tr>
+    <tr><td class="k">grain</td><td>Event-level detail</td><td>Dashboard-level rollups</td></tr>
+    <tr><td class="k">on failure</td><td>Critical — event is retried</td><td>Best-effort — logged, acked</td></tr>
+  </table>
+
+  <div style="height:34px"></div>
+
+  <div class="card">
+    <div class="mono" style="font-size:17px;line-height:1.7">ON CONFLICT (client_id, service_name,<br>&nbsp;&nbsp;endpoint, method, time_bucket)<br>DO UPDATE SET total_hits = ... + EXCLUDED.total_hits</div>
+    <p style="margin-top:14px">One upsert per event folds it into an existing hourly row, so a 24-hour dashboard query reads buckets instead of scanning raw events.</p>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="kicker" style="margin-bottom:34px">
+    One store optimised for ingestion.<br>One optimised for analytics.
+  </div>
+
+  <div class="foot">
+    <div class="wordmark"><span class="dot"></span>Sendry</div>
+    <div>07 / 10</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 08 · THE DASHBOARD ═══════════════════ -->
+<section class="slide light">
+  <div class="eyebrow">The product</div>
+  <div style="height:26px"></div>
+  <h1 class="t-md">And then the part<br>people actually look at.</h1>
+
+  <div style="height:36px"></div>
+
+  <!-- ────────────────────────────────────────────────────────────────
+       SCREENSHOT DROP-IN POINT
+       Once you have generated real demo traffic and the charts are
+       populated, replace this whole <div class="win"> block with:
+
+         <div class="figwrap">
+           <img src="docs/dashboard.png" alt="Sendry dashboard">
+         </div>
+
+       Keep the image at or under ~575px tall (crop to the KPI strip +
+       charts) or this slide will overflow. Only ship numbers you
+       actually generated and can defend.
+  ──────────────────────────────────────────────────────────────── -->
+  <div class="win">
+    <div class="bar"><i></i><i></i><i></i><span>Sendry — Overview</span><div class="wtag">UI structure</div></div>
+    <div class="bd">
+      <div class="kpis">
+        <div class="kpi"><u>Total hits</u><s>—</s></div>
+        <div class="kpi"><u>Average latency</u><s>—</s></div>
+        <div class="kpi"><u>Error rate</u><s>—</s></div>
+        <div class="kpi"><u>Success rate</u><s>—</s></div>
+        <div class="kpi"><u>Unique services</u><s>—</s></div>
+        <div class="kpi"><u>Unique endpoints</u><s>—</s></div>
+      </div>
+      <div class="panes">
+        <div class="pane">
+          <b>API traffic summary</b><i>total, success and error hits per hour</i>
+          <div class="art">
+            <u style="height:38%"></u><u style="height:56%"></u><u style="height:44%"></u>
+            <u style="height:72%"></u><u style="height:61%"></u><u style="height:88%"></u>
+            <u style="height:69%"></u><u style="height:52%"></u><u style="height:78%"></u>
+            <u style="height:47%"></u><u style="height:64%"></u><u style="height:35%"></u>
+          </div>
+        </div>
+        <div class="pane">
+          <b>Status codes</b><i>2xx vs 4xx vs 5xx</i>
+          <div class="ring"></div>
+        </div>
+      </div>
+      <div class="tbl">
+        <b>Top endpoints</b>
+        <div class="row"><u style="width:64%"></u></div>
+        <div class="row"><u style="width:48%"></u></div>
+        <div class="row"><u style="width:33%"></u></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="height:26px"></div>
+
+  <p class="lead" style="font-size:23px">
+    Six KPI cards, an hourly traffic series, status-code distribution and a
+    top-endpoint ranking — every number served from the
+    <strong>pre-aggregated PostgreSQL buckets</strong>, not from raw events.
+  </p>
+
+  <div style="height:22px"></div>
+
+  <div class="chips">
+    <span class="chip on">React 18</span><span class="chip">Vite 5</span>
+    <span class="chip">TanStack Query 5</span><span class="chip">ApexCharts 5</span>
+    <span class="chip">SCSS modules</span>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="foot">
+    <div class="wordmark"><span class="dot"></span>Sendry</div>
+    <div>08 / 10</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 09 · TRADE-OFFS ═══════════════════ -->
+<section class="slide dark">
+  <div class="eyebrow">Trade-offs</div>
+  <div style="height:26px"></div>
+  <h1 class="t-md">Where this architecture<br>breaks — and what<br>V2 does about it.</h1>
+
+  <div style="height:42px"></div>
+
+  <div class="v2">
+    <div class="hd">Today</div>
+    <div class="hd p">The problem</div>
+    <div class="hd n">V2</div>
+
+    <div class="cl"><b>idempotency</b>In-memory Set, 100k entries, FIFO eviction. Simple and fast.</div>
+    <div class="cl mid">Doesn't survive a restart, and isn't shared between consumer replicas.</div>
+    <div class="cl new"><b>redis</b>SET NX EX, so dedupe is durable and shared.</div>
+
+    <div class="cl"><b>circuit breaker</b>Breaker state lives in process memory.</div>
+    <div class="cl mid">Ten replicas means ten opinions about whether the database is healthy.</div>
+    <div class="cl new"><b>redis</b>One shared breaker state across every replica.</div>
+
+    <div class="r3" style="display:contents">
+      <div class="cl"><b>throughput</b>A single consumer process with prefetch of 10.</div>
+      <div class="cl mid">The consumer is the ceiling. Nothing else in the pipeline is.</div>
+      <div class="cl new"><b>competing consumers</b>Scale replicas horizontally behind the same queue.</div>
+    </div>
+  </div>
+
+  <div style="height:34px"></div>
+
+  <div class="scale">
+    <div class="sr"><u>Now</u><b>RabbitMQ → 1 consumer → in-process state</b></div>
+    <div class="sr on"><u>Next</u><b>RabbitMQ → N consumers → shared Redis state</b></div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="kicker" style="margin-bottom:34px">
+    Knowing the ceiling is worth more<br>than pretending there isn't one.
+  </div>
+
+  <div class="foot">
+    <div class="wordmark"><span class="dot"></span>Sendry</div>
+    <div>09 / 10</div>
+  </div>
+</section>
+
+<!-- ═══════════════════ 10 · CLOSE ═══════════════════ -->
+<section class="slide dark">
+  <div class="eyebrow">Why I built it</div>
+  <div style="height:30px"></div>
+  <h1 class="t-lg">I didn't build Sendry<br>to make another<br>dashboard.</h1>
+  <div style="height:30px"></div>
+  <p class="lead" style="font-size:28px">
+    I built it to understand what happens when a system has to process events
+    <strong>reliably</strong> without slowing down the application
+    <strong>generating them</strong>.
+  </p>
+
+  <div style="height:44px"></div>
+
+  <div class="chips">
+    <span class="chip">Node.js</span><span class="chip">Express</span>
+    <span class="chip">RabbitMQ</span><span class="chip">MongoDB</span>
+    <span class="chip">PostgreSQL</span><span class="chip">React</span>
+    <span class="chip">Vite</span><span class="chip">Docker</span>
+    <span class="chip">Zod</span><span class="chip">Winston</span>
+  </div>
+
+  <div style="height:40px"></div>
+
+  <div class="links">
+    <div class="lk"><u>GitHub</u><b>github.com/sultanxdev/sendry</b></div>
+    <div class="lk"><u>Live demo</u><b>add-your-deployment-url</b></div>
+    <div class="lk on"><u>Open to</u><b>Backend &amp; Full-Stack Engineer roles</b></div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="kicker" style="margin-bottom:34px">
+    Architecture notes and trade-offs<br>are in the repo. Questions welcome.
+  </div>
+
+  <div class="foot">
+    <div class="wordmark"><span class="dot"></span>Sendry</div>
+    <div>10 / 10</div>
+  </div>
+</section>
+
+</div>
+</body>
+</html>

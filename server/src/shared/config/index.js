@@ -1,8 +1,21 @@
 // yaha pr basically ham global level ka config likhege!!
 
-import dotenv from "dotenv"
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+import fs from "fs";
 
-dotenv.config()
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const serverEnvPath = path.resolve(__dirname, '../../../.env');
+const rootEnvPath = path.resolve(__dirname, '../../../../.env');
+
+if (fs.existsSync(serverEnvPath)) {
+    dotenv.config({ path: serverEnvPath });
+} else if (fs.existsSync(rootEnvPath)) {
+    dotenv.config({ path: rootEnvPath });
+} else {
+    dotenv.config();
+}
 
 
 const config = {

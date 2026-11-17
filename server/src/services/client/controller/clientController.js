@@ -91,11 +91,47 @@ export class ClientController {
  */
     async getClientApiKeys(req, res, next) {
         try {
-            const { clientId } = req.params;
-            const apiKey = await this.clientService.getClientApiKeys(clientId, req.user)
-            return res.status(200).json(ResponseFormatter.success(apiKey, "API key fetched successfully", 200))
+            const clientId = req.params.clientId || req.user.clientId;
+            if (!clientId) {
+                return res.status(400).json(ResponseFormatter.error("Client ID is required", 400));
+            }
+            const apiKey = await this.clientService.getClientApiKeys(clientId, req.user);
+            return res.status(200).json(ResponseFormatter.success(apiKey, "API key fetched successfully", 200));
         } catch (error) {
-            next(error)
+            next(error);
+        }
+    }
+
+    async getCurrentClient(req, res, next) {
+        try {
+            const clientId = req.user?.clientId;
+            if (!clientId) {
+                return res.status(404).json(ResponseFormatter.error("No client associated with this user", 404));
+            }
+            const client = await this.clientService.clientRepository.findById(clientId);
+            if (!client) {
+                return res.status(404).json(ResponseFormatter.error("Client not found", 404));
+            }
+            return res.status(200).json(ResponseFormatter.success(client, "Client retrieved successfully", 200));
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    async getMyApiKeys(req, res, next) {
+        return this.getClientApiKeys(req, res, next);
+    }
+
+    async createMyApiKey(req, res, next) {
+        try {
+            const clientId = req.params.clientId || req.user.clientId;
+            if (!clientId) {
+                return res.status(400).json(ResponseFormatter.error("Client ID is required", 400));
+            }
+            const apiKey = await this.clientService.createApiKey(clientId, req.body, req.user);
+            return res.status(201).json(ResponseFormatter.success(apiKey, "API key created successfully", 201));
+        } catch (error) {
+            next(error);
         }
     }
 }

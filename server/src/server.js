@@ -104,23 +104,30 @@ app.use(errorHandler)
  * Initialize database connections and start the server
  */
 async function initializeConnection() {
+    logger.info("Initializing database connections...");
+
+    // 1. PostgreSQL (Neon Database)
     try {
-        logger.info("Initializing database connections...");
-
-        // Connect to MongoDB;
-        await mongodb.connect();
-
-        // Connect to PG;
         await postgres.testConnection();
-
-        // Connect to RabbitMQ;
-        await rabbitmq.connect();
-
-        logger.info("All connections established successfully");
-    } catch (error) {
-        logger.error("Failed to initialize connections:", error);
-        throw error;
+    } catch (err) {
+        logger.error("PostgreSQL connection error:", err.message);
     }
+
+    // 2. MongoDB
+    try {
+        await mongodb.connect();
+    } catch (err) {
+        logger.warn("MongoDB connection warning:", err.message);
+    }
+
+    // 3. RabbitMQ
+    try {
+        await rabbitmq.connect();
+    } catch (err) {
+        logger.warn("RabbitMQ connection warning:", err.message);
+    }
+
+    logger.info("All connections checked successfully");
 }
 
 /**

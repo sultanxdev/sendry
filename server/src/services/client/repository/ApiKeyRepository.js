@@ -1,14 +1,20 @@
 import logger from "../../../shared/config/logger.js";
-import ApiKey from "../../../shared/models/ApiKey.js"
-import BaseApiKeyRepository from "./BaseApiKeyRepository.js"
+import ApiKey from "../../../shared/models/ApiKey.js";
+import BaseApiKeyRepository from "./BaseApiKeyRepository.js";
+import mongoose from "mongoose";
+import memoryStore from "../../../shared/utils/memoryStore.js";
 
 /**
  * MongoApiKeyRepository class to handle database operations related to API keys
- * This class extends the BaseApiKeyRepository and provides implementations for creating API keys, finding API keys by value, and finding/counting API keys by client ID. It uses Mongoose for database interactions and includes error handling and logging for each operation.
+ * This class extends the BaseApiKeyRepository and provides implementations with resilient in-memory fallback.
  */
 class MongoApiKeyRepository extends BaseApiKeyRepository {
     constructor() {
-        super(ApiKey)
+        super(ApiKey);
+    }
+
+    _isDbReady() {
+        return mongoose.connection && mongoose.connection.readyState === 1;
     }
 
     /**
@@ -18,6 +24,11 @@ class MongoApiKeyRepository extends BaseApiKeyRepository {
      */
     async create(apiKeyData) {
         try {
+            if (!this._isDbReady()) {
+                logger.info("[ApiKeyRepository] Mongo offline: saving API key in memory store");
+                return await memoryStore.createApiKey(apiKeyData);
+            }
+
             const apiKey = new this.model(apiKeyData);
             await apiKey.save();
             logger.info('API key created in database', { keyId: apiKey.keyId });
@@ -36,6 +47,10 @@ class MongoApiKeyRepository extends BaseApiKeyRepository {
      */
     async findByKeyValue(keyValue, includeInactive = false) {
         try {
+            if (!this._isDbReady()) {
+                return await memoryStore.findApiKeyByValue(keyValue);
+            }
+
             const filter = { keyValue };
             if (!includeInactive) {
                 filter.isActive = true;
@@ -49,8 +64,6 @@ class MongoApiKeyRepository extends BaseApiKeyRepository {
         }
     }
 
-
-
     /**
      * Find API keys by client ID
      * @param {string} clientId - Client ID
@@ -59,6 +72,10 @@ class MongoApiKeyRepository extends BaseApiKeyRepository {
      */
     async findByClientId(clientId, filters = {}) {
         try {
+            if (!this._isDbReady()) {
+                return await memoryStore.findApiKeysByClientId(clientId);
+            }
+
             const query = { clientId, ...filters };
             const apiKeys = await this.model.find(query)
                 .populate('createdBy', 'username email')
