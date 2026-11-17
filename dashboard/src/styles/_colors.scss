@@ -1,47 +1,33 @@
 :root,
 .theme-light,
 .theme-purple {
-  --background: 0 0% 100%; /* White #FFFFFF */
-  --foreground: 255 9% 14%; /* Charcoal #222026 */
-  --muted: 0 0% 92%; /* Light gray #EBEBEB */
-  --muted-foreground: 255 5% 45%;
+  --background: 80 15% 95%; /* Paper #F3F5F0 */
+  --foreground: 160 21% 7%; /* Dark Ink #0E1512 */
+  --muted: 135 15% 88%; /* Sage #DCE7DF */
+  --muted-foreground: 153 9% 35%; /* Mute #52625A */
   --popover: 0 0% 100%;
-  --popover-foreground: 255 9% 14%;
+  --popover-foreground: 160 21% 7%;
   --card: 0 0% 100%;
-  --card-foreground: 255 9% 14%;
-  --border: 0 0% 92%; /* Light gray #EBEBEB */
-  --input: 0 0% 92%; /* Light gray #EBEBEB */
-  --primary: 88 71% 65%; /* Lime Green #A7E46A */
-  --primary-foreground: 255 9% 14%; /* Charcoal #222026 */
-  --secondary: 199 87% 82%; /* Soft Light Blue #A8DFF8 */
-  --secondary-foreground: 255 9% 14%; /* Charcoal #222026 */
-  --accent: 0 0% 92%; /* Light gray #EBEBEB */
-  --accent-foreground: 255 9% 14%;
-  --destructive: 0 84% 60%;
+  --card-foreground: 160 21% 7%;
+  --border: 135 11% 86%; /* Line #D9E1DB */
+  --input: 135 11% 86%; /* Line #D9E1DB */
+  --primary: 151 74% 47%; /* Sendry Green #1FD27A */
+  --primary-foreground: 160 21% 7%; /* Ink #0E1512 */
+  --secondary: 135 15% 88%; /* Sage #DCE7DF */
+  --secondary-foreground: 160 21% 7%;
+  --accent: 151 74% 47%;
+  --accent-foreground: 160 21% 7%;
+  --destructive: 4 74% 49%; /* #D92D20 */
   --destructive-foreground: 0 0% 100%;
-  --ring: 88 71% 65%;
-  --radius: 1.5rem; /* Large rounded corners from screenshots (24px) */
+  --ring: 151 74% 47%;
+  --radius: 1rem;
 
-  --theme-background: linear-gradient(
-    135deg,
-    #ffffff 0%,
-    #f8faf5 40%,
-    #f2f9ec 70%,
-    #eef7f9 100%
-  );
-  --theme-logo-bg: linear-gradient(
-    135deg,
-    #a7e46a 0%,
-    #a8dff8 100%
-  );
-  --theme-logo-shadow: 0 8px 25px rgba(167, 228, 106, 0.35);
-  --theme-text-gradient: linear-gradient(
-    135deg,
-    #222026 0%,
-    #3c3a41 100%
-  );
-  --theme-glass-bg: rgba(255, 255, 255, 0.8);
-  --theme-glass-border: rgba(235, 235, 235, 0.85);
-  --theme-glass-strong-bg: rgba(255, 255, 255, 0.95);
-  --theme-glass-strong-border: rgba(235, 235, 235, 0.95);
+  --theme-background: #F3F5F0;
+  --theme-logo-bg: #1FD27A;
+  --theme-logo-shadow: 0 4px 14px rgba(31, 210, 122, 0.25);
+  --theme-text-gradient: #0E1512;
+  --theme-glass-bg: rgba(255, 255, 255, 0.95);
+  --theme-glass-border: #D9E1DB;
+  --theme-glass-strong-bg: #ffffff;
+  --theme-glass-strong-border: #D9E1DB;
 }
