@@ -9,14 +9,14 @@ export function StatusDistributionChart({ data }) {
     const options = useMemo(() => ({
         chart: { type: 'donut', background: 'transparent' },
         theme: { mode: chart.mode },
-        labels: data?.labels ?? ['Success', 'Errors'],
-        colors: ['#A7E46A', '#222026'],
+        labels: data?.labels ?? ['Success (2xx)', 'Errors (4xx/5xx)'],
+        colors: ['#1FD27A', '#D92D20'],
         dataLabels: {
             enabled: true,
             style: { 
                 fontSize: '12px', 
                 fontWeight: 'bold',
-                fontFamily: 'Urbanist, sans-serif'
+                fontFamily: "'Instrument Sans', sans-serif"
             },
         },
         plotOptions: {
@@ -27,25 +27,25 @@ export function StatusDistributionChart({ data }) {
                         show: true,
                         name: { 
                             show: true, 
-                            fontSize: '14px', 
-                            color: chart.labelColor,
-                            fontFamily: 'Urbanist, sans-serif',
-                            fontWeight: 650
+                            fontSize: '13px', 
+                            color: '#52625A',
+                            fontFamily: "'Instrument Sans', sans-serif",
+                            fontWeight: 600
                         },
                         value: {
                             show: true,
-                            fontSize: '22px',
+                            fontSize: '24px',
                             fontWeight: 'bold',
-                            color: '#222026',
-                            fontFamily: 'Urbanist, sans-serif',
+                            color: '#0E1512',
+                            fontFamily: "'Bricolage Grotesque', sans-serif",
                             formatter: (val) => Number(val).toLocaleString(),
                         },
                         total: {
                             show: true,
                             label: 'Total Requests',
-                            fontSize: '12px',
-                            color: chart.labelColor,
-                            fontFamily: 'Urbanist, sans-serif',
+                            fontSize: '11px',
+                            color: '#52625A',
+                            fontFamily: "'DM Mono', monospace",
                             fontWeight: 500,
                             formatter: (w) => w.globals.seriesTotals.reduce((a, b) => a + b, 0).toLocaleString(),
                         },
@@ -55,18 +55,18 @@ export function StatusDistributionChart({ data }) {
         },
         legend: { 
             position: 'bottom', 
-            labels: { colors: chart.labelColor },
-            fontFamily: 'Urbanist, sans-serif',
+            labels: { colors: '#0E1512' },
+            fontFamily: "'Instrument Sans', sans-serif",
             fontWeight: 600
         },
         tooltip: {
             theme: chart.tooltipTheme,
             style: {
-                fontFamily: 'Urbanist, sans-serif'
+                fontFamily: "'Instrument Sans', sans-serif"
             },
-            y: { formatter: (v) => `${Number(v).toLocaleString()} requests` },
+            y: { formatter: (v) => `${Number(v).toLocaleString()} hits` },
         },
-    }), [data?.labels, chart.mode, chart.labelColor, chart.tooltipTheme]);
+    }), [data?.labels, chart.mode, chart.tooltipTheme]);
 
     const series = useMemo(() => data?.values ?? [], [data?.values]);
 
@@ -76,20 +76,22 @@ export function StatusDistributionChart({ data }) {
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>Status Code Distribution</CardTitle>
-                <CardDescription>HTTP status code breakdown</CardDescription>
+                <CardDescription>Breakdown between successful and failed requests</CardDescription>
             </CardHeader>
             <CardContent>
                 {isEmpty ? (
                     <div className="flex flex-col items-center justify-center min-h-[300px] text-slate-400">
-                        <p className="font-semibold text-sm m-0">No request data available yet</p>
-                        <span className="text-xs text-slate-500 mt-1">Data will appear once API requests are ingested</span>
+                        <p className="font-semibold text-sm text-[#0E1512] m-0">No status code distribution yet</p>
+                        <span className="text-xs text-slate-500 mt-1">Data will populate automatically once API requests are ingested</span>
                     </div>
                 ) : (
                     <div className="py-2">
-                        <Chart options={options} series={series} type="donut" height={335} />
+                        <Chart options={options} series={series} type="donut" height={320} />
                     </div>
                 )}
             </CardContent>
         </Card>
     );
 }
+
+export default StatusDistributionChart;

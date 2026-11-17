@@ -35,7 +35,6 @@ By decoupling HTTP ingestion from database writes via a durable message broker (
 
 ---
 
-<<<<<<< HEAD
 ## 📊 Hard Engineering Metrics
 
 | Metric | Measured Value | Context / Engineering Achievement |
@@ -48,17 +47,6 @@ By decoupling HTTP ingestion from database writes via a durable message broker (
 | **Deduplication Set Capacity** | **100,000 entries** | Bounded FIFO memory cache inside consumer to prevent memory leaks under peak traffic |
 | **Data Retention (Raw Logs)** | **30 days** | Automated lifecycle management via MongoDB TTL indexes |
 | **Database Sync Granularity**| **1 hour** | PostgreSQL metrics aggregated in time-series buckets via UPSERT query loops |
-=======
-## 📋 Table of Contents
-- [System Architecture](#-system-architecture)
-- [Ingest Sequence Flow](#-ingest-sequence-flow)
-- [Production-Grade Resiliency Engineering](#-production-grade-resiliency-engineering)
-- [Project Directory Structure](#-project-directory-structure)
-- [Quick Start](#-quick-start)
-- [Developer SDK Integration](#-developer-sdk-integration)
-- [API Reference](#-api-reference)
-- [SaaS Deployment Guide](#-saas-deployment-guide)
->>>>>>> d84585f043be154eb1e4e462a6db7dcfaf7a5729
 
 ---
 
@@ -74,7 +62,7 @@ Sendry splits ingestion, buffering, consumer-side persistence, and query layers 
    - **MongoDB**: Schema-agnostic storage for raw JSON request bodies and headers, structured with a self-cleaning 30-day TTL index.
    - **PostgreSQL**: Highly structured analytics store holding hourly pre-aggregated time-series stats.
 
-![Sendry Architecture](./Docs/Architecture.png)
+![Sendry Architecture](./Docs/Architecture.svg)
 
 ---
 

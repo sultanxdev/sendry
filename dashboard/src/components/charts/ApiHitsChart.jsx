@@ -16,38 +16,42 @@ export function ApiHitsChart({ stats }) {
         },
         theme: { mode: chart.mode },
         plotOptions: {
-            bar: { borderRadius: 8, columnWidth: '45%', distributed: true },
+            bar: { borderRadius: 6, columnWidth: '40%', distributed: true },
         },
         dataLabels: { enabled: false },
-        grid: { borderColor: chart.gridColor, strokeDashArray: 4 },
+        grid: { borderColor: '#E5EAE6', strokeDashArray: 3 },
         xaxis: {
-            categories: ['Total Hits', 'Success', 'Errors'],
+            categories: ['Total Hits', 'Success (2xx)', 'Errors (4xx/5xx)'],
             labels: { 
                 style: { 
-                    colors: chart.labelColor,
-                    fontFamily: 'Urbanist, sans-serif',
-                    fontWeight: 600
+                    colors: '#52625A',
+                    fontFamily: "'Instrument Sans', sans-serif",
+                    fontWeight: 600,
+                    fontSize: '12px'
                 } 
             },
+            axisBorder: { color: '#D9E1DB' },
+            axisTicks: { color: '#D9E1DB' }
         },
         yaxis: {
             labels: { 
                 style: { 
-                    colors: chart.labelColor,
-                    fontFamily: 'Urbanist, sans-serif'
+                    colors: '#52625A',
+                    fontFamily: "'Instrument Sans', sans-serif",
+                    fontSize: '12px'
                 } 
             },
         },
-        colors: ['#A8DFF8', '#A7E46A', '#222026'],
+        colors: ['#0E1512', '#1FD27A', '#D92D20'],
         legend: { show: false },
         tooltip: { 
             theme: chart.tooltipTheme,
             style: {
                 fontSize: '12px',
-                fontFamily: 'Urbanist, sans-serif'
+                fontFamily: "'Instrument Sans', sans-serif"
             }
         },
-    }), [chart.mode, chart.labelColor, chart.gridColor, chart.tooltipTheme]);
+    }), [chart.mode, chart.tooltipTheme]);
 
     const series = useMemo(() => [{
         name: 'Hits',
@@ -62,18 +66,20 @@ export function ApiHitsChart({ stats }) {
         <Card className="w-full">
             <CardHeader>
                 <CardTitle>API Traffic Summary</CardTitle>
-                <CardDescription>Total, success and error hit counts</CardDescription>
+                <CardDescription>Total volume, success responses, and error count</CardDescription>
             </CardHeader>
             <CardContent>
                 {isEmpty ? (
                     <div className="flex flex-col items-center justify-center min-h-[300px] text-slate-400">
-                        <p className="font-semibold text-sm m-0">No traffic data available yet</p>
-                        <span className="text-xs text-slate-500 mt-1">Data will appear once API requests are ingested</span>
+                        <p className="font-semibold text-sm text-[#0E1512] m-0">No traffic data recorded yet</p>
+                        <span className="text-xs text-slate-500 mt-1">Data will populate automatically once API requests are ingested</span>
                     </div>
                 ) : (
-                    <Chart options={options} series={series} type="bar" height={350} />
+                    <Chart options={options} series={series} type="bar" height={320} />
                 )}
             </CardContent>
         </Card>
     );
 }
+
+export default ApiHitsChart;

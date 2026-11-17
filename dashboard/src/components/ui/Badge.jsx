@@ -2,18 +2,19 @@ import { cn } from "../../lib/utils";
 
 export function Badge({ className, variant = "default", children, ...props }) {
     const variants = {
-        default: "bg-[#222026] text-white border-transparent",
-        secondary: "bg-[#A8DFF8]/20 text-[#222026] border-[#A8DFF8]/30",
-        destructive: "bg-red-500/10 text-red-600 border-red-500/25",
-        outline: "text-slate-600 border-[#EBEBEB] bg-white",
-        success: "bg-[#A7E46A]/20 text-slate-800 border-[#A7E46A]/30",
-        warning: "bg-yellow-500/10 text-yellow-755 border-yellow-500/25",
+        default: "bg-[#0E1512] text-white border-[#0E1512]",
+        secondary: "bg-[#DCE7DF] text-[#0E1512] border-[#D9E1DB]",
+        destructive: "bg-[#D92D20]/15 text-[#D92D20] border-[#D92D20]/30",
+        outline: "text-slate-600 border-[#D9E1DB] bg-white",
+        success: "bg-[#1FD27A]/20 text-[#0B3B2E] border-[#1FD27A]/40",
+        warning: "bg-[#F2B233]/20 text-[#8F5B00] border-[#F2B233]/40",
+        live: "bg-[#1FD27A] text-[#0E1512] border-transparent font-bold",
     };
 
     return (
         <span
             className={cn(
-                "inline-flex items-center gap-1 rounded-full border px-2.5 py-0.5 text-xs font-bold transition-colors select-none",
+                "inline-flex items-center gap-1 rounded-lg border px-2.5 py-0.5 text-xs font-semibold select-none",
                 variants[variant],
                 className
             )}
@@ -23,3 +24,5 @@ export function Badge({ className, variant = "default", children, ...props }) {
         </span>
     );
 }
+
+export default Badge;
